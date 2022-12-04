@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# TODO Logs
+
+if [ "$1" == "" ]; then
+    echo "Folder must be specified" >&2
+    exit 1
+elif [ ! -e "$1" ]; then
+    echo "Folder not found" >&2
+    exit 1
+fi
+
+if [ "$2" == "" ]; then
+    foldername=$(basename "$1")
+else
+    foldername="$2"
+fi
+
+tar -cJf "$foldername".tar.xz "$1"
+
+if [ -e "$foldername".tar.xz ]; then
+
+    scp "$foldername".tar.xz pi@ssh.martials.no:~/sites-updates
+
+    rm "$foldername".tar.xz
+fi
