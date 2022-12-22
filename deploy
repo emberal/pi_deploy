@@ -3,24 +3,28 @@
 # TODO Logs
 
 if [ "$1" == "" ]; then
-    echo "Folder must be specified" >&2
+    echo "Directory must be specified" >&2
     exit 1
 elif [ ! -e "$1" ]; then
-    echo "Folder not found" >&2
+    echo "Directory not found" >&2
     exit 1
 fi
 
 if [ "$2" == "" ]; then
-    foldername=$(basename "$1")
+    dirname=$(basename "$1")
 else
-    foldername="$2"
+    dirname="$2"
 fi
 
-tar -cJf "$foldername".tar.xz "$1"/*
+tar -cJf "$dirname".tar.xz -C "$1" .
 
-if [ -e "$foldername".tar.xz ]; then
+if [ -e "$dirname".tar.xz ]; then
 
-    scp "$foldername".tar.xz pi@ssh.martials.no:~/sites-updates
+    scp "$dirname".tar.xz pi@ssh.martials.no:~/sites-updates
 
-    rm "$foldername".tar.xz
+    rm "$dirname".tar.xz
+    echo "Folder sent to server"
+else
+    echo "Failed to create tarball" >&2
+    exit 1
 fi
