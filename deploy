@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # TODO Logs
 
@@ -16,7 +16,7 @@ else
     foldername="$2"
 fi
 
-tar -cJf "$foldername".tar.xz "$1"
+tar -cJf "$foldername".tar.xz "$1"/*
 
 if [ -e "$foldername".tar.xz ]; then
 
