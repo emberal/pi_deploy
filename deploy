@@ -16,7 +16,7 @@ else
     dirname="$2"
 fi
 
-echo "Creating tarball with name $1"
+echo "Creating tarball with name $dirname"
 tar -cJf /tmp/"$dirname".tar.xz -C "$1" .
 
 if [ -e /tmp/"$dirname".tar.xz ]; then
