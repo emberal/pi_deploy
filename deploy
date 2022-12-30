@@ -16,13 +16,15 @@ else
     dirname="$2"
 fi
 
+echo "Creating tarball with name $1"
 tar -cJf /tmp/"$dirname".tar.xz -C "$1" .
 
 if [ -e /tmp/"$dirname".tar.xz ]; then
 
+    echo "Tarball created, sending to server"
     scp /tmp/"$dirname".tar.xz pi@ssh.martials.no:~/sites-updates
 
-    echo "Folder sent to server"
+    echo "Tarball sent to server"
 else
     echo "Failed to create tarball" >&2
     exit 1
