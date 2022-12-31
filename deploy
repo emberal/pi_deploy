@@ -1,12 +1,23 @@
 #!/bin/sh
 
-# TODO Logs
+logfile=/var/log/pi_deploy/deploy.log
+
+if [ ! -e "$logfile" ]; then
+    echo "Logfile not found, creating..."
+    sudo mkdir -p /var/log/pi_deploy
+    sudo touch "$logfile"
+    sudo chown martin:martin "$logfile"
+fi
+
+echo "=====================================================" | tee -a "$logfile"
+echo "Deploying new version at $(LC_ALL=en-GB.UTF8 date)" | tee -a "$logfile"
+echo "=====================================================" | tee -a "$logfile"
 
 if [ "$1" == "" ]; then
-    echo "Directory must be specified" >&2
+    echo "Directory must be specified as param \$1, exiting..." | tee -a "$logfile"
     exit 1
 elif [ ! -e "$1" ]; then
-    echo "Directory not found" >&2
+    echo "Directory not found, exiting..." | tee -a "$logfile"
     exit 1
 fi
 
@@ -16,16 +27,16 @@ else
     dirname="$2"
 fi
 
-echo "Creating tarball with name $dirname"
+echo "Creating tarball from directory '$1' with name '$dirname'" | tee -a "$logfile"
 tar -cJf /tmp/"$dirname".tar.xz -C "$1" .
 
 if [ -e /tmp/"$dirname".tar.xz ]; then
 
-    echo "Tarball created, sending to server"
+    echo "Tarball created, sending to server" | tee -a "$logfile"
     scp /tmp/"$dirname".tar.xz pi@ssh.martials.no:~/sites-updates
 
-    echo "Tarball sent to server"
+    echo "Tarball sent to server" | tee -a "$logfile"
 else
-    echo "Failed to create tarball" >&2
+    echo "Failed to create tarball" >&2 | tee -a "$logfile"
     exit 1
 fi
